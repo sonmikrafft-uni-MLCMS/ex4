@@ -17,6 +17,7 @@ def plot_2d_dataset(
     x_label: str,
     y_label: str,
     title: str,
+    axis_equal: bool = False,
     save_path: Optional[str] = None,
     c: Optional[str] = None,
 ) -> None:
@@ -28,6 +29,7 @@ def plot_2d_dataset(
         x_label (str): Label for x-axis.
         y_label (str): Label for y-axis.
         title (str): Title of the plot.
+        axis_equal (book, optional): Whether to have equal axis. Defaults to False.
         save_path (Optional[str], optional): Path to save. Defaults to None.
         c (Optional[str], optional): Color of the points. Defaults to None.
     """
@@ -36,7 +38,8 @@ def plot_2d_dataset(
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     ax.set_title(title)
-    ax.axis("equal")
+    if axis_equal:
+        ax.axis("equal")
     ax.grid()
     fig.tight_layout()
     if save_path:
@@ -52,6 +55,7 @@ def plot_3d_dataset(
     y_label: str,
     z_label: str,
     title: str,
+    axis_equal: bool = False,
     save_path: Optional[str] = None,
     c: Optional[str] = None,
 ) -> None:
@@ -65,6 +69,7 @@ def plot_3d_dataset(
         y_label (str): Label for y-axis.
         z_label (str): Label for z-axis.
         title (str): Title of the plot.
+        axis_equal (book, optional): Whether to have equal axis. Defaults to False.
         save_path (Optional[str], optional): Path to save. Defaults to None.
         c (Optional[str], optional): Color of the points. Defaults to None.
     """
@@ -75,6 +80,8 @@ def plot_3d_dataset(
     ax.set_ylabel(y_label)
     ax.set_zlabel(z_label)
     ax.set_title(title)
+    if axis_equal:
+        ax.axis("equal")
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)

@@ -164,8 +164,6 @@ def plot_pairwise_eigenvector(
         ax = axs.flatten()[i]
         ax.scatter(eigenvectors[:, 1], eigenvectors[:, i + correction], c=c)
         ax.set_title(f"Eigenvector 1 vs. Eigenvector {i + correction}")
-        ax.set_xlabel("Eigenvector 1")
-        ax.set_ylabel(f"Eigenvector {i + correction}")
         ax.grid()
         if xlim:
             ax.set_xlim(xlim)

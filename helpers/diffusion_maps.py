@@ -3,25 +3,9 @@ from numpy.linalg import eig
 
 from scipy.sparse.linalg import eigsh
 from scipy.linalg import fractional_matrix_power
+from scipy.spatial import distance_matrix
 
-
-def get_distance_matrix(data: np.ndarray) -> np.ndarray:
-    """
-    Given a data matrix of shape (n, d), returns a distance matrix of shape (n, n) where each entry (i, j) is the
-    distance between data[i] and data[j].
-
-    Args:
-        data (np.ndarray): A data matrix of shape (n, d), where each row is a data point of shape (d,).
-
-    Returns:
-        np.ndarray: A distance matrix of shape (n, n).
-    """
-    n = data.shape[0]
-    distance_matrix = np.zeros((n, n))
-    for i in range(n):
-        for j in range(n):
-            distance_matrix[i, j] = np.linalg.norm(data[i] - data[j], ord=2)
-    return distance_matrix
+np.random.seed(66)
 
 
 def get_epsilon(distance_matrix: np.ndarray) -> float:
@@ -86,7 +70,7 @@ def get_normalized_kernel_matrix(kernel_matrix: np.ndarray, diagonal_normalizati
 
 
 def get_diffusion_map(data_matrix: np.ndarray, L: int):
-    D = get_distance_matrix(data_matrix)
+    D = distance_matrix(data_matrix, data_matrix)
     epsilon = get_epsilon(D)
     W = get_kernel_maxtrix(D, epsilon)
     P = get_diagonal_normalization_matrix(W)

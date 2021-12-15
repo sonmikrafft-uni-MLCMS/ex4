@@ -2,6 +2,7 @@ from typing import Optional
 import matplotlib
 import matplotlib.pyplot as plt
 from numpy import ndarray
+import math
 
 # collection of functions to plot a dataset
 
@@ -128,6 +129,50 @@ def plot_two_pedestrians(
     ax.axis("equal")
     ax.legend()
     ax.grid()
+    fig.tight_layout()
+    if save_path:
+        fig.savefig(save_path)
+
+
+def plot_pairwise_eigenvector(
+    eigenvectors: ndarray,
+    axis_equal: bool = False,
+    xlim: Optional[list[float]] = None,
+    ylim: Optional[list[float]] = None,
+    save_path: Optional[str] = None,
+    c: Optional[str] = None,
+) -> None:
+    """[summary]
+
+    Args:
+        eigenvectors (np.ndarray): [description]
+        axis_equal (bool, optional): [description]. Defaults to False.
+        xlim (Optional[list[float]], optional): [description]. Defaults to None.
+        ylim (Optional[list[float]], optional): [description]. Defaults to None.
+        save_path (Optional[str], optional): [description]. Defaults to None.
+        c (Optional[str], optional): [description]. Defaults to None.
+    """
+    num_eigenvectors = eigenvectors.shape[1] - 1
+    ncols = 2
+    nrows = int(math.ceil(num_eigenvectors / ncols))
+    fig, axs = plt.subplots(nrows, ncols, figsize=(ncols * 7, nrows * 5))
+
+    correction = 0
+    for i in range(num_eigenvectors):
+        if i == 1:
+            correction = 1
+        ax = axs.flatten()[i]
+        ax.scatter(eigenvectors[:, 1], eigenvectors[:, i + correction], c=c)
+        ax.set_title(f"Eigenvector 1 vs. Eigenvector {i + correction}")
+        ax.set_xlabel("Eigenvector 1")
+        ax.set_ylabel(f"Eigenvector {i + correction}")
+        ax.grid()
+        if xlim:
+            ax.set_xlim(xlim)
+        if ylim:
+            ax.set_ylim(ylim)
+        if axis_equal:
+            ax.axis("equal")
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)

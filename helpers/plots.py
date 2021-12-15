@@ -1,9 +1,11 @@
 from typing import Optional
+import matplotlib
 import matplotlib.pyplot as plt
 from numpy import ndarray
 
 # collection of functions to plot a dataset
 
+matplotlib.rcParams['figure.figsize'] = (7, 5)
 CMAP = plt.cm.Spectral
 plt.set_cmap(CMAP)
 plt.close()

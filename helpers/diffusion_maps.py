@@ -78,5 +78,6 @@ def get_diffusion_map(data_matrix: np.ndarray, L: int):
     Q = get_diagonal_normalization_matrix(K)
     frac = fractional_matrix_power(Q, -0.5)
     T_hat = frac @ K @ frac
+    eig_val, eig_vec = eigsh(T_hat, k=L + 1)  # use eigsh (vs. eigs) since matrix is symmetric
     eig_val, eig_vec = np.flip(eig_val, axis=0), np.flip(eig_vec, axis=1)
     return np.sqrt(eig_val ** (1 / epsilon)), frac @ eig_vec

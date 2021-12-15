@@ -17,6 +17,8 @@ def plot_2d_dataset(
     x_label: str,
     y_label: str,
     title: str,
+    xlim: Optional[list[float]] = None,
+    ylim: Optional[list[float]] = None,
     axis_equal: bool = False,
     save_path: Optional[str] = None,
     c: Optional[str] = None,
@@ -31,6 +33,8 @@ def plot_2d_dataset(
         x_label (str): Label for x-axis.
         y_label (str): Label for y-axis.
         title (str): Title of the plot.
+        xlim (Optional[list[float, float]], optional): Limits for x-axis. Defaults to None.
+        ylim (Optional[list[float, float]], optional): Limits for y-axis. Defaults to None.
         axis_equal (book, optional): Whether to have equal axis. Defaults to False.
         save_path (Optional[str], optional): Path to save. Defaults to None.
         c (Optional[str], optional): Color of the points. Defaults to None.
@@ -39,6 +43,10 @@ def plot_2d_dataset(
     """
     fig, ax = plt.subplots()
     ax.scatter(x, y, c=c)
+    if xlim:
+        ax.set_xlim(xlim)
+    if ylim:
+        ax.set_ylim(ylim)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     ax.set_title(title)

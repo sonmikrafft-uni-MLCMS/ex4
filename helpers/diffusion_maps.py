@@ -76,7 +76,7 @@ def get_diffusion_map(data_matrix: np.ndarray, L: int):
     P = get_diagonal_normalization_matrix(W)
     K = get_normalized_kernel_matrix(W, P)
     Q = get_diagonal_normalization_matrix(K)
-    T_hat = fractional_matrix_power(Q, -0.5) @ K @ fractional_matrix_power(Q, -0.5)
-    eig_val, eig_vec = eigsh(T_hat, k=L + 1, which="LA")  # vs. "LM"
+    frac = fractional_matrix_power(Q, -0.5)
+    T_hat = frac @ K @ frac
     eig_val, eig_vec = np.flip(eig_val, axis=0), np.flip(eig_vec, axis=1)
-    return np.sqrt(eig_val ** (1 / epsilon)), fractional_matrix_power(Q, -0.5) @ eig_vec
+    return np.sqrt(eig_val ** (1 / epsilon)), frac @ eig_vec

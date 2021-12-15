@@ -44,7 +44,6 @@ def plot_2d_dataset(
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)
-    fig.show()
 
 
 def plot_3d_dataset(
@@ -85,7 +84,6 @@ def plot_3d_dataset(
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)
-    fig.show()
 
 
 def plot_two_pedestrians(
@@ -111,4 +109,3 @@ def plot_two_pedestrians(
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)
-    fig.show()

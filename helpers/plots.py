@@ -163,7 +163,7 @@ def plot_pairwise_eigenvector(
             correction = 1
         ax = axs.flatten()[i]
         ax.scatter(eigenvectors[:, 1], eigenvectors[:, i + correction], c=c)
-        ax.set_title(f"Eigenvector 1 vs. Eigenvector {i + correction}")
+        ax.set_title(r'$\psi_1$ vs. $\psi_{}$'.format(i + correction))
         ax.grid()
         if xlim:
             ax.set_xlim(xlim)

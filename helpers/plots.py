@@ -20,6 +20,8 @@ def plot_2d_dataset(
     axis_equal: bool = False,
     save_path: Optional[str] = None,
     c: Optional[str] = None,
+    colorbar: bool = False,
+    colorbar_label: str = "",
 ) -> None:
     """[summary]
 
@@ -32,6 +34,8 @@ def plot_2d_dataset(
         axis_equal (book, optional): Whether to have equal axis. Defaults to False.
         save_path (Optional[str], optional): Path to save. Defaults to None.
         c (Optional[str], optional): Color of the points. Defaults to None.
+        colorbar (bool, optional): Whether to show a colorbar. Defaults to False.
+        colorbar_label (str, optional): Label for the colorbar. Defaults to "".
     """
     fig, ax = plt.subplots()
     ax.scatter(x, y, c=c)
@@ -41,6 +45,9 @@ def plot_2d_dataset(
     if axis_equal:
         ax.axis("equal")
     ax.grid()
+    if colorbar:
+        cbar = fig.colorbar(ax.collections[0])
+        cbar.set_label(colorbar_label)
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)
@@ -57,6 +64,8 @@ def plot_3d_dataset(
     axis_equal: bool = False,
     save_path: Optional[str] = None,
     c: Optional[str] = None,
+    colorbar: bool = False,
+    colorbar_label: str = "",
 ) -> None:
     """[summary]
 
@@ -71,6 +80,8 @@ def plot_3d_dataset(
         axis_equal (book, optional): Whether to have equal axis. Defaults to False.
         save_path (Optional[str], optional): Path to save. Defaults to None.
         c (Optional[str], optional): Color of the points. Defaults to None.
+        colorbar (bool, optional): Whether to show a colorbar. Defaults to False.
+        colorbar_label (str, optional): Label for the colorbar. Defaults to "".
     """
     fig = plt.figure()
     ax = fig.add_subplot(projection="3d")
@@ -81,6 +92,9 @@ def plot_3d_dataset(
     ax.set_title(title)
     if axis_equal:
         ax.axis("equal")
+    if colorbar:
+        cbar = fig.colorbar(ax.collections[0])
+        cbar.set_label(colorbar_label)
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)

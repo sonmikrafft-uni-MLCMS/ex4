@@ -142,15 +142,15 @@ def plot_pairwise_eigenvector(
     save_path: Optional[str] = None,
     c: Optional[str] = None,
 ) -> None:
-    """[summary]
+    """Plot pairwise eigenvector.
 
     Args:
-        eigenvectors (np.ndarray): [description]
-        axis_equal (bool, optional): [description]. Defaults to False.
-        xlim (Optional[list[float]], optional): [description]. Defaults to None.
-        ylim (Optional[list[float]], optional): [description]. Defaults to None.
-        save_path (Optional[str], optional): [description]. Defaults to None.
-        c (Optional[str], optional): [description]. Defaults to None.
+        eigenvectors (np.ndarray): Array of eigenvectors of shape (n_samples, n_eigenvectors).
+        axis_equal (bool, optional): Whether to have equal axis. Defaults to False.
+        xlim (Optional[list[float]], optional): Limits for x-axis. Defaults to None.
+        ylim (Optional[list[float]], optional): Limits for y-axis. Defaults to None.
+        save_path (Optional[str], optional): Path to save. Defaults to None.
+        c (Optional[str], optional): Color of the points. Defaults to None.
     """
     num_eigenvectors = eigenvectors.shape[1] - 1
     ncols = 2

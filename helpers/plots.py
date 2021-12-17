@@ -175,7 +175,30 @@ def plot_pairwise_eigenvector(
         fig.savefig(save_path)
 
 
-def plot_3d_pca_plot(X, dir_axis, x_label, y_label, z_label, title, add_mean_to_axis=True, **kwargs) -> None:
+def plot_3d_pca_plot(
+    X: ndarray,
+    dir_axis: ndarray,
+    x_label: str,
+    y_label: str,
+    z_label: str,
+    title: str,
+    add_mean_to_axis: bool = True,
+    **kwargs,
+) -> None:
+    """Plot 3D PCA plot.
+
+    Args:
+        X (ndarray): 3D data of shape (n_samples, 3).
+        dir_axis (ndarray): Direction of coordinate axis.
+            dir_axis[0] is the direction of x-axis,
+            dir_axis[1] is the direction of y-axis,
+            dir_axis[2] is the direction of z-axis.
+        x_label (str): Label for x-axis.
+        y_label (str): Label for y-axis.
+        z_label (str): Label for z-axis.
+        title (str): Title of the plot.
+        add_mean_to_axis (bool, optional): Whether to add mean to axis. Defaults to True.
+    """
     X_mean = np.zeros(3)
     if add_mean_to_axis:
         X_mean = np.mean(X, axis=0)
@@ -207,7 +230,22 @@ def plot_3d_pca_plot(X, dir_axis, x_label, y_label, z_label, title, add_mean_to_
     fig.tight_layout()
 
 
-def plot_2d_pca_plot(X, dir_axis, x_label, y_label, title, add_mean_to_axis=True, **kwargs) -> None:
+def plot_2d_pca_plot(
+    X: ndarray, dir_axis: ndarray, x_label: str, y_label: str, title: str, add_mean_to_axis: bool = True, **kwargs
+) -> None:
+    """Plot 2D PCA plot.
+
+    Args:
+        X (ndarray): 2D data of shape (n_samples, 2).
+        dir_axis (ndarray): Direction of coordinate axis.
+            dir_axis[0] is the direction of x-axis,
+            dir_axis[1] is the direction of y-axis,
+            dir_axis[2] is the direction of z-axis.
+        x_label (str): Label for x-axis.
+        y_label (str): Label for y-axis.
+        title (str): Title of the plot.
+        add_mean_to_axis (bool, optional): Whether to add mean to axis. Defaults to True.
+    """
     X_mean = np.zeros(3)
     if add_mean_to_axis:
         X_mean = np.mean(X, axis=0)

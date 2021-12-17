@@ -2,11 +2,12 @@ from typing import Optional
 import matplotlib
 import matplotlib.pyplot as plt
 from numpy import ndarray
+import numpy as np
 import math
 
 # collection of functions to plot a dataset
 
-matplotlib.rcParams['figure.figsize'] = (7, 5)
+matplotlib.rcParams["figure.figsize"] = (7, 5)
 CMAP = plt.cm.Spectral
 plt.set_cmap(CMAP)
 plt.close()
@@ -21,11 +22,10 @@ def plot_2d_dataset(
     xlim: Optional[list[float]] = None,
     ylim: Optional[list[float]] = None,
     axis_equal: bool = False,
-    save_path: Optional[str] = None,
-    c: Optional[str] = None,
     colorbar: bool = False,
     colorbar_label: str = "",
-) -> None:
+    **kwargs,
+) -> tuple[plt.Axes, plt.Figure]:
     """[summary]
 
     Args:
@@ -37,13 +37,15 @@ def plot_2d_dataset(
         xlim (Optional[list[float, float]], optional): Limits for x-axis. Defaults to None.
         ylim (Optional[list[float, float]], optional): Limits for y-axis. Defaults to None.
         axis_equal (book, optional): Whether to have equal axis. Defaults to False.
-        save_path (Optional[str], optional): Path to save. Defaults to None.
-        c (Optional[str], optional): Color of the points. Defaults to None.
         colorbar (bool, optional): Whether to show a colorbar. Defaults to False.
         colorbar_label (str, optional): Label for the colorbar. Defaults to "".
+        **kwargs: Parameters for matplotlib.pyplot.scatter.
+
+    Returns:
+        tuple[plt.Axes, plt.Figure]: Tuple of axes and figure.
     """
     fig, ax = plt.subplots()
-    ax.scatter(x, y, c=c)
+    ax.scatter(x, y, **kwargs)
     if xlim:
         ax.set_xlim(xlim)
     if ylim:
@@ -57,9 +59,7 @@ def plot_2d_dataset(
     if colorbar:
         cbar = fig.colorbar(ax.collections[0])
         cbar.set_label(colorbar_label)
-    fig.tight_layout()
-    if save_path:
-        fig.savefig(save_path)
+    return fig, ax
 
 
 def plot_3d_dataset(
@@ -71,11 +71,10 @@ def plot_3d_dataset(
     z_label: str,
     title: str,
     axis_equal: bool = False,
-    save_path: Optional[str] = None,
-    c: Optional[str] = None,
     colorbar: bool = False,
     colorbar_label: str = "",
-) -> None:
+    **kwargs,
+) -> tuple[plt.Figure, plt.Axes]:
     """[summary]
 
     Args:
@@ -87,14 +86,16 @@ def plot_3d_dataset(
         z_label (str): Label for z-axis.
         title (str): Title of the plot.
         axis_equal (book, optional): Whether to have equal axis. Defaults to False.
-        save_path (Optional[str], optional): Path to save. Defaults to None.
-        c (Optional[str], optional): Color of the points. Defaults to None.
         colorbar (bool, optional): Whether to show a colorbar. Defaults to False.
         colorbar_label (str, optional): Label for the colorbar. Defaults to "".
+        **kwargs: Parameters for matplotlib.pyplot.scatter.
+
+    Returns:
+        tuple[plt.Figure, plt.Axes]: Tuple of figure and axes.
     """
-    fig = plt.figure()
+    fig = plt.figure(figsize=(7, 5))
     ax = fig.add_subplot(projection="3d")
-    ax.scatter(x, y, z, c=c)
+    ax.scatter(x, y, z, **kwargs)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     ax.set_zlabel(z_label)
@@ -104,9 +105,7 @@ def plot_3d_dataset(
     if colorbar:
         cbar = fig.colorbar(ax.collections[0])
         cbar.set_label(colorbar_label)
-    fig.tight_layout()
-    if save_path:
-        fig.savefig(save_path)
+    return fig, ax
 
 
 def plot_two_pedestrians(
@@ -140,7 +139,7 @@ def plot_pairwise_eigenvector(
     xlim: Optional[list[float]] = None,
     ylim: Optional[list[float]] = None,
     save_path: Optional[str] = None,
-    c: Optional[str] = None,
+    **kwargs,
 ) -> None:
     """Plot pairwise eigenvector.
 
@@ -150,7 +149,7 @@ def plot_pairwise_eigenvector(
         xlim (Optional[list[float]], optional): Limits for x-axis. Defaults to None.
         ylim (Optional[list[float]], optional): Limits for y-axis. Defaults to None.
         save_path (Optional[str], optional): Path to save. Defaults to None.
-        c (Optional[str], optional): Color of the points. Defaults to None.
+        **kwargs: Parameters for matplotlib.pyplot.scatter.
     """
     num_eigenvectors = eigenvectors.shape[1] - 1
     ncols = 2
@@ -162,8 +161,8 @@ def plot_pairwise_eigenvector(
         if i == 1:
             correction = 1
         ax = axs.flatten()[i]
-        ax.scatter(eigenvectors[:, 1], eigenvectors[:, i + correction], c=c)
-        ax.set_title(r'$\psi_1$ vs. $\psi_{}$'.format(i + correction))
+        ax.scatter(eigenvectors[:, 1], eigenvectors[:, i + correction], **kwargs)
+        ax.set_title(r"$\psi_1$ vs. $\psi_{}$".format(i + correction))
         ax.grid()
         if xlim:
             ax.set_xlim(xlim)
@@ -174,3 +173,64 @@ def plot_pairwise_eigenvector(
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path)
+
+
+def plot_3d_pca_plot(X, dir_axis, x_label, y_label, z_label, title, add_mean_to_axis=True, **kwargs) -> None:
+    X_mean = np.zeros(3)
+    if add_mean_to_axis:
+        X_mean = np.mean(X, axis=0)
+
+    fig, ax = plot_3d_dataset(
+        X[:, 0],
+        X[:, 1],
+        X[:, 2],
+        x_label=x_label,
+        y_label=y_label,
+        z_label=z_label,
+        title=title,
+        **kwargs,
+    )
+
+    scale = 20
+    colors = ["red", "green", "blue"]
+    labels = ["PC1", "PC2", "PC3"]
+    for dir, color, label in zip(dir_axis, colors, labels):
+        ax.plot(
+            [X_mean[0], X_mean[0] + scale * dir[0]],
+            [X_mean[1], X_mean[1] + scale * dir[1]],
+            [X_mean[2], X_mean[2] + scale * dir[2]],
+            color=color,
+            lw=3,
+            label=label,
+        )
+    ax.legend()
+    fig.tight_layout()
+
+
+def plot_2d_pca_plot(X, dir_axis, x_label, y_label, title, add_mean_to_axis=True, **kwargs) -> None:
+    X_mean = np.zeros(3)
+    if add_mean_to_axis:
+        X_mean = np.mean(X, axis=0)
+
+    fig, ax = plot_2d_dataset(
+        X[:, 0],
+        X[:, 1],
+        x_label=x_label,
+        y_label=y_label,
+        title=title,
+        **kwargs,
+    )
+
+    scale = 20
+    colors = ["red", "green"]
+    labels = ["PC1", "PC2"]
+    for dir, color, label in zip(dir_axis, colors, labels):
+        ax.plot(
+            [X_mean[0], X_mean[0] + scale * dir[0]],
+            [X_mean[1], X_mean[1] + scale * dir[1]],
+            color=color,
+            lw=3,
+            label=label,
+        )
+    ax.legend()
+    fig.tight_layout()

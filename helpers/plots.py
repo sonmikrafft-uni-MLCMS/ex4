@@ -1,9 +1,9 @@
-from typing import Optional
 import matplotlib
 import matplotlib.pyplot as plt
-from numpy import ndarray
 import numpy as np
 import math
+
+from typing import Optional
 
 # collection of functions to plot a dataset
 
@@ -109,7 +109,7 @@ def plot_3d_dataset(
 
 
 def plot_two_pedestrians(
-    X_pedestrians: ndarray, x_label: str, y_label: str, title: str, save_path: Optional[str] = None
+    X_pedestrians: np.ndarray, x_label: str, y_label: str, title: str, save_path: Optional[str] = None
 ) -> None:
     """[summary]
 
@@ -134,7 +134,7 @@ def plot_two_pedestrians(
 
 
 def plot_pairwise_eigenvector(
-    eigenvectors: ndarray,
+    eigenvectors: np.ndarray,
     axis_equal: bool = False,
     xlim: Optional[list[float]] = None,
     ylim: Optional[list[float]] = None,
@@ -176,8 +176,8 @@ def plot_pairwise_eigenvector(
 
 
 def plot_3d_pca_plot(
-    X: ndarray,
-    dir_axis: ndarray,
+    X: np.ndarray,
+    dir_axis: np.ndarray,
     x_label: str,
     y_label: str,
     z_label: str,
@@ -231,7 +231,7 @@ def plot_3d_pca_plot(
 
 
 def plot_2d_pca_plot(
-    X: ndarray, dir_axis: ndarray, x_label: str, y_label: str, title: str, add_mean_to_axis: bool = True, **kwargs
+    X: np.ndarray, dir_axis: np.ndarray, x_label: str, y_label: str, title: str, add_mean_to_axis: bool = True, **kwargs
 ) -> None:
     """Plot 2D PCA plot.
 

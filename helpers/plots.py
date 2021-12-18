@@ -105,6 +105,7 @@ def plot_3d_dataset(
     if colorbar:
         cbar = fig.colorbar(ax.collections[0])
         cbar.set_label(colorbar_label)
+    fig.tight_layout()
     return fig, ax
 
 
@@ -134,7 +135,7 @@ def plot_two_pedestrians(
     ax.grid()
     fig.tight_layout()
     if save_path:
-        fig.savefig(save_path)
+        fig.savefig(save_path, bbox_inches="tight")
 
 
 def plot_pairwise_eigenvector(
@@ -176,7 +177,7 @@ def plot_pairwise_eigenvector(
             ax.axis("equal")
     fig.tight_layout()
     if save_path:
-        fig.savefig(save_path)
+        fig.savefig(save_path, bbox_inches="tight")
 
 
 def plot_3d_pca_plot(
@@ -187,6 +188,7 @@ def plot_3d_pca_plot(
     z_label: str,
     title: str,
     add_mean_to_axis: bool = True,
+    save_path: Optional[str] = None,
     **kwargs,
 ) -> None:
     """Plot 3D PCA plot.
@@ -202,6 +204,8 @@ def plot_3d_pca_plot(
         z_label (str): Label for z-axis.
         title (str): Title of the plot.
         add_mean_to_axis (bool, optional): Whether to add mean to axis. Defaults to True.
+        save_path (Optional[str], optional): Path to save. Defaults to None.
+        **kwargs: Parameters for matplotlib.pyplot.scatter of the data.
     """
     X_mean = np.zeros(3)
     if add_mean_to_axis:
@@ -232,10 +236,19 @@ def plot_3d_pca_plot(
         )
     ax.legend()
     fig.tight_layout()
+    if save_path:
+        fig.savefig(save_path, bbox_inches="tight")
 
 
 def plot_2d_pca_plot(
-    X: np.ndarray, dir_axis: np.ndarray, x_label: str, y_label: str, title: str, add_mean_to_axis: bool = True, **kwargs
+    X: np.ndarray,
+    dir_axis: np.ndarray,
+    x_label: str,
+    y_label: str,
+    title: str,
+    add_mean_to_axis: bool = True,
+    save_path: Optional[str] = None,
+    **kwargs,
 ) -> None:
     """Plot 2D PCA plot.
 
@@ -249,6 +262,8 @@ def plot_2d_pca_plot(
         y_label (str): Label for y-axis.
         title (str): Title of the plot.
         add_mean_to_axis (bool, optional): Whether to add mean to axis. Defaults to True.
+        save_path (Optional[str], optional): Path to save. Defaults to None.
+        **kwargs: Parameters for matplotlib.pyplot.scatter of the data.
     """
     X_mean = np.zeros(3)
     if add_mean_to_axis:
@@ -276,3 +291,5 @@ def plot_2d_pca_plot(
         )
     ax.legend()
     fig.tight_layout()
+    if save_path:
+        fig.savefig(save_path, bbox_inches="tight")

@@ -68,15 +68,42 @@ def get_normalized_kernel_matrix(kernel_matrix: np.ndarray, diagonal_normalizati
     return np.linalg.inv(diagonal_normalization_matrix) @ kernel_matrix @ np.linalg.inv(diagonal_normalization_matrix)
 
 
-def get_diffusion_map(data_matrix: np.ndarray, L: int):
+def get_diffusion_map(data_matrix: np.ndarray, L: int) -> tuple[np.ndarray, np.ndarray]:
+    """Given a dataset of shape (n, d), applies a diffusion map algorithm to the dataset and returns the embedding along
+    the first L eigenfunction associated with the largest eigenvalues, and the eigenvalues.
+
+    This function is based on the implementation of the diffusion map algorithm in the paper:
+    https://epubs.siam.org/doi/pdf/10.1137/12088183X
+
+    It tries to remove the influence of the sampling density of the data points by using some clever normalization.
+
+    Args:
+        data_matrix (np.ndarray): A dataset of shape (n, d).
+        L (int): The number of eigenfunctions to return. This includes the zero eigenfunction, so a value of L results
+            in L+1 eigenfunctions.
+
+    Returns:
+        tuple[np.ndarray, np.ndarray]: A tuple of two numpy arrays. The first array is the embedding of the dataset
+            along the first L eigenfunctions associated with the largest eigenvalues, and the second array is the
+            eigenvalues.
+
+            The embedding is of shape (n, L+1), and the eigenvalues are of shape (L+1,).
+    """
+    # form kernel matrix
     D = distance_matrix(data_matrix, data_matrix)
     epsilon = get_epsilon(D)
     W = get_kernel_maxtrix(D, epsilon)
+    
+    # normalization
     P = get_diagonal_normalization_matrix(W)
     K = get_normalized_kernel_matrix(W, P)
     Q = get_diagonal_normalization_matrix(K)
     frac = fractional_matrix_power(Q, -0.5)
     T_hat = frac @ K @ frac
+
+    # eigendecomposition
     eig_val, eig_vec = eigsh(T_hat, k=L + 1)  # use eigsh (vs. eigs) since matrix is symmetric
     eig_val, eig_vec = np.flip(eig_val, axis=0), np.flip(eig_vec, axis=1)
+
+    # return embedding and eigenvalues
     return np.sqrt(eig_val ** (1 / epsilon)), frac @ eig_vec

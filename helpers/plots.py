@@ -111,11 +111,15 @@ def plot_3d_dataset(
 def plot_two_pedestrians(
     X_pedestrians: np.ndarray, x_label: str, y_label: str, title: str, save_path: Optional[str] = None
 ) -> None:
-    """[summary]
+    """Given the dataset of the pedestrians, plot the first two pedestrians.
 
     Args:
-        X_pedestrians (ndarray): [description]
-    """
+        X_pedestrians (np.ndarray): Dataset of the pedestrians.
+        x_label (str): [description]: Label for x-axis.
+        y_label (str): [description]: Label for y-axis.
+        title (str): [description]: Title of the plot.
+        save_path (Optional[str], optional): [description]. Defaults to None.
+    """    
 
     X1, X2 = X_pedestrians[:, :2], X_pedestrians[:, 2:4]
 

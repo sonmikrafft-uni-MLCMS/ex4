@@ -120,7 +120,7 @@ def plot_two_pedestrians(
         y_label (str): [description]: Label for y-axis.
         title (str): [description]: Title of the plot.
         save_path (Optional[str], optional): [description]. Defaults to None.
-    """    
+    """
 
     X1, X2 = X_pedestrians[:, :2], X_pedestrians[:, 2:4]
 

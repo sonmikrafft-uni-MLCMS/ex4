@@ -144,6 +144,7 @@ def plot_pairwise_eigenvector(
     xlim: Optional[list[float]] = None,
     ylim: Optional[list[float]] = None,
     save_path: Optional[str] = None,
+    title_suffix: str = "",
     **kwargs,
 ) -> None:
     """Plot pairwise eigenvector.
@@ -154,6 +155,7 @@ def plot_pairwise_eigenvector(
         xlim (Optional[list[float]], optional): Limits for x-axis. Defaults to None.
         ylim (Optional[list[float]], optional): Limits for y-axis. Defaults to None.
         save_path (Optional[str], optional): Path to save. Defaults to None.
+        title_suffix (str, optional): Suffix for the title. Defaults to "".
         **kwargs: Parameters for matplotlib.pyplot.scatter.
     """
     num_eigenvectors = eigenvectors.shape[1] - 1
@@ -167,7 +169,7 @@ def plot_pairwise_eigenvector(
             correction = 1
         ax = axs.flatten()[i]
         ax.scatter(eigenvectors[:, 1], eigenvectors[:, i + correction], **kwargs)
-        ax.set_title(r"$\psi_1$ vs. $\psi_{}$".format(i + correction))
+        ax.set_title(r"$\psi_1$ vs. $\psi_{}${}".format(i + correction, title_suffix))
         ax.grid()
         if xlim:
             ax.set_xlim(xlim)

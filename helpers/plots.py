@@ -140,6 +140,8 @@ def plot_two_pedestrians(
 
 def plot_pairwise_eigenvector(
     eigenvectors: np.ndarray,
+    n_cols: int = 2,
+    individual_size: tuple[int, int] = (7, 3),
     axis_equal: bool = False,
     xlim: Optional[list[float]] = None,
     ylim: Optional[list[float]] = None,
@@ -151,6 +153,8 @@ def plot_pairwise_eigenvector(
 
     Args:
         eigenvectors (np.ndarray): Array of eigenvectors of shape (n_samples, n_eigenvectors).
+        n_cols (int, optional): Number of columns. Defaults to 2.
+        individual_size (tuple[int, int], optional): Size of the individual plot. Defaults to (7, 5).
         axis_equal (bool, optional): Whether to have equal axis. Defaults to False.
         xlim (Optional[list[float]], optional): Limits for x-axis. Defaults to None.
         ylim (Optional[list[float]], optional): Limits for y-axis. Defaults to None.
@@ -159,9 +163,8 @@ def plot_pairwise_eigenvector(
         **kwargs: Parameters for matplotlib.pyplot.scatter.
     """
     num_eigenvectors = eigenvectors.shape[1] - 1
-    ncols = 2
-    nrows = int(math.ceil(num_eigenvectors / ncols))
-    fig, axs = plt.subplots(nrows, ncols, figsize=(ncols * 7, nrows * 5))
+    nrows = int(math.ceil(num_eigenvectors / n_cols))
+    fig, axs = plt.subplots(nrows, n_cols, figsize=(n_cols * individual_size[0], nrows * individual_size[1]))
 
     correction = 0
     for i in range(num_eigenvectors):

@@ -315,8 +315,8 @@ def plot_2d_train_test(
         **kwargs: Parameters for matplotlib.pyplot.scatter of both splits.
     """
     fig, ax = plt.subplots()
-    ax.scatter(train[:, 0], train[:, 1], color="red", label="train", **kwargs)
-    ax.scatter(test[:, 0], test[:, 1], color="blue", label="test", **kwargs)
+    ax.scatter(train[:, 0], train[:, 1], color="red", label="train", marker="o", s=6, **kwargs)
+    ax.scatter(test[:, 0], test[:, 1], color="blue", label="test", marker="^", s=2, **kwargs)
     ax.legend()
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)

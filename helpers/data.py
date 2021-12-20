@@ -43,7 +43,7 @@ def get_unit_cycle_dataset(N: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     k_vec = np.arange(1, N + 1)
     colors = k_vec
-    x, t  = _get_unit_cycle_data_k(k_vec, len(k_vec))
+    x, t = _get_unit_cycle_data_k(k_vec, len(k_vec))
     return x.T, t, colors
 
 

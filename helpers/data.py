@@ -43,7 +43,7 @@ def get_unit_cycle_dataset(N: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     k_vec = np.arange(1, N + 1)
     colors = k_vec
-    x, t  = _get_unit_cycle_data_k(k_vec, len(k_vec))
+    x, t = _get_unit_cycle_data_k(k_vec, len(k_vec))
     return x.T, t, colors
 
 
@@ -85,3 +85,25 @@ def get_trajectory_dataset(path: str = "data/data_DMAP_PCA_vadere.txt") -> np.nd
 
     """
     return pd.read_csv(path, delimiter=" ", header=None).to_numpy()
+
+
+def get_fire_evac_dataset(
+    path_train: str = "data/FireEvac_train_set.npy", path_test: str = "data/FireEvac_test_set.npy"
+) -> tuple[np.ndarray, np.ndarray]:
+    """Load the fire evac dataset.
+
+    The fire evac dataset contains a training set of size 3000 and a test set of size 600.
+    Each row contains the position (x, y) of a single person.
+
+    Args:
+        path_train (str, optional): Path to the training dataset. Defaults to "data/FireEvac_train_set.npy".
+        path_test (str, optional): Path to the test dataset. Defaults to "data/FireEvac_test_set.npy".
+
+    Returns:
+        tuple[np.ndarray, np.ndarray]: Tuple of training and test data.
+            Training data is a 2D array of shape (3000, 2), where each row is a point (x, y) in the dataset.
+            Test data is a 2D array of shape (600, 2), where each row is a point (x, y) in the dataset.
+    """
+    train = np.load(path_train)
+    test = np.load(path_test)
+    return train, test

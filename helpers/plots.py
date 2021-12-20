@@ -298,3 +298,29 @@ def plot_2d_pca_plot(
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path, bbox_inches="tight")
+
+
+def plot_2d_train_test(
+    train: np.ndarray, test: np.ndarray, xlabel: str, ylabel: str, title: str, save_path: Optional[str] = None, **kwargs
+) -> None:
+    """Plot train and test data of 2D dataset.
+
+    Args:
+        train (ndarray): 2D data of shape (n_samples, 2).
+        test (ndarray): 2D data of shape (n_samples, 2).
+        xlabel (str): Label for x-axis.
+        ylabel (str): Label for y-axis.
+        title (str): Title of the plot.
+        save_path (Optional[str], optional): Path to save. Defaults to None.
+        **kwargs: Parameters for matplotlib.pyplot.scatter of both splits.
+    """
+    fig, ax = plt.subplots()
+    ax.scatter(train[:, 0], train[:, 1], color="red", label="train", **kwargs)
+    ax.scatter(test[:, 0], test[:, 1], color="blue", label="test", **kwargs)
+    ax.legend()
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    fig.tight_layout()
+    if save_path:
+        fig.savefig(save_path, bbox_inches="tight")

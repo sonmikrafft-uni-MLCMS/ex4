@@ -21,7 +21,7 @@ class Sampling(layers.Layer):
         eps = K.random_normal(shape=(batch, dim))
         return mu + tf.exp(0.5 * sigma) * eps
 
-class Encoder(layers.Layer):
+class Encoder(keras.Model):
     """
     Encodes input of any input_shape to triplet (mu, sigma, z)
     """
@@ -44,7 +44,7 @@ class Encoder(layers.Layer):
         z = self.sampling((mu, sigma))
         return mu, sigma, z
 
-class Decoder(layers.Layer):
+class Decoder(keras.Model):
     """
     Converts the encoded vector z back to reasonable data
     """

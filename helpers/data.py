@@ -1,8 +1,10 @@
 import math
-
+import scipy.misc
 import numpy as np
 import pandas as pd
 from sklearn.datasets import make_swiss_roll
+from skimage.transform import resize
+
 
 # collection of functions to generate datasets
 
@@ -64,7 +66,6 @@ def get_swiss_roll_dataset(N: int) -> tuple[np.ndarray, np.ndarray]:
             Data is a 3D array of shape (N, 3), where each row is a point in the dataset.
             Colors is a 1D array of shape (N,), where each element is the color of the corresponding point.
     """
-
     x, color = make_swiss_roll(n_samples=N)
     return x, color
 
@@ -85,6 +86,18 @@ def get_trajectory_dataset(path: str = "data/data_DMAP_PCA_vadere.txt") -> np.nd
 
     """
     return pd.read_csv(path, delimiter=" ", header=None).to_numpy()
+
+
+def get_racoon_img():
+    """
+    Used to create and resize an sample image of a racoon
+
+    Returns:
+        racoon_img_reshaped (np.ndarray): Resized image of racoon
+    """
+    racoon_img = scipy.misc.face(gray=True)
+    racoon_img_reshaped = resize(racoon_img, (249, 185))
+    return racoon_img_reshaped
 
 
 def get_fire_evac_dataset(

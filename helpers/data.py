@@ -4,46 +4,59 @@ import numpy as np
 import pandas as pd
 from sklearn.datasets import make_swiss_roll
 from skimage.transform import resize
+
+
 # collection of functions to generate datasets
 
 
-def _get_unit_cycle_data(k: int, N: int) -> np.ndarray:
-    """
-    Helper function to generate uniformly distributed points on the unit circle.
+def _get_unit_cycle_data_k(k: int, N: int) -> tuple[np.ndarray, np.ndarray]:
+    """Helper function to generate uniformly distributed points on the unit circle.
+
+    Calculates the k-th term of the sequence of points on the unit circle as:
+    t = (2 * np.pi * k) / (N + 1)
+    x = (cos(t), sin(t))
 
     Args:
         k (int): Current index of the point to generate.
         N (int): Total number of points to generate.
 
     Returns:
-        np.ndarray: Point on the unit circle, in the form of a 2D array of shape (2,).
+        tuple[np.ndarray, np.ndarray]: Tuple of t and x.
     """
-    t = 2 * math.pi * k / (N + 1)
+    t = np.array(2 * math.pi * k / (N + 1))
     x = np.array([np.cos(t), np.sin(t)])
-    return x
+    return x, t
 
 
-def get_unit_cycle_dataset(N: int) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Generate a dataset of N points, uniformly distributed on the unit circle.
+def get_unit_cycle_dataset(N: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Generate a dataset of N points, uniformly distributed on the unit circle.
+
+    The data is defined as the set of all 2D points x in R^2, for k = 1, ..., N, as:
+        x = (cos(t), sin(t))
+        t = (2 * np.pi * k) / (N + 1)
 
     Args:
         N (int): Number of points in the dataset to generate uniformly distributed on the unit circle.
 
     Returns:
-        tuple[np.ndarray, np.ndarray]: Tuple of data and colors.
+        tuple[np.ndarray, np.ndarray, np.ndarray]: Tuple of data, t, and colors.
             Data is a 2D array of shape (N, 2), where each row is a point in the dataset.
             Colors is a 1D array of shape (N,), where each element is the color of the corresponding point.
     """
     k_vec = np.arange(1, N + 1)
     colors = k_vec
-    X = _get_unit_cycle_data(k_vec, len(k_vec))
-    return X.T, colors
+    x, t = _get_unit_cycle_data_k(k_vec, len(k_vec))
+    return x.T, t, colors
 
 
 def get_swiss_roll_dataset(N: int) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Get swiss roll dataset of N points.
+    """Get swiss roll dataset of N points.
+
+    Getting dataset from https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_swiss_roll.html.
+
+    The data is defined as the set of all 3D points x in R^3, for k = 1, ..., N, as:
+        x = (u*cos(u), v, u*sin(u))
+        where (u, v) in [0, 10]^2 are chosen uniformly at random.
 
     Args:
         N (int): N points in the dataset to generate.
@@ -53,9 +66,8 @@ def get_swiss_roll_dataset(N: int) -> tuple[np.ndarray, np.ndarray]:
             Data is a 3D array of shape (N, 3), where each row is a point in the dataset.
             Colors is a 1D array of shape (N,), where each element is the color of the corresponding point.
     """
-
-    X, color = make_swiss_roll(n_samples=N)
-    return X, color
+    x, color = make_swiss_roll(n_samples=N)
+    return x, color
 
 
 def get_trajectory_dataset(path: str = "data/data_DMAP_PCA_vadere.txt") -> np.ndarray:
@@ -77,7 +89,7 @@ def get_trajectory_dataset(path: str = "data/data_DMAP_PCA_vadere.txt") -> np.nd
 
 
 def get_racoon_img():
-    """ 
+    """
     Used to create and resize an sample image of a racoon
 
     Returns:
@@ -88,77 +100,23 @@ def get_racoon_img():
     return racoon_img_reshaped
 
 
-def get_explained_variance_ratio(singular_value_matrix: np.ndarray) -> np.ndarray:
-    """ 
-    Used to calculate the energy according to principal components
+def get_fire_evac_dataset(
+    path_train: str = "data/FireEvac_train_set.npy", path_test: str = "data/FireEvac_test_set.npy"
+) -> tuple[np.ndarray, np.ndarray]:
+    """Load the fire evac dataset.
+
+    The fire evac dataset contains a training set of size 3000 and a test set of size 600.
+    Each row contains the position (x, y) of a single person.
 
     Args:
-        singular_value_matrix (np.ndarray): Diagonal singular value matrix from SVD
+        path_train (str, optional): Path to the training dataset. Defaults to "data/FireEvac_train_set.npy".
+        path_test (str, optional): Path to the test dataset. Defaults to "data/FireEvac_test_set.npy".
 
     Returns:
-        np.ndarray: explained variance ratio ("Energy") per principle component
-
+        tuple[np.ndarray, np.ndarray]: Tuple of training and test data.
+            Training data is a 2D array of shape (3000, 2), where each row is a point (x, y) in the dataset.
+            Test data is a 2D array of shape (600, 2), where each row is a point (x, y) in the dataset.
     """
-    explained_variance_ratio = singular_value_matrix**2/np.sum(singular_value_matrix**2)
-    return explained_variance_ratio
-
-
-def get_pca_reconstruction(dataset: np.ndarray, get_full_reconstruction: bool, n_principal_components: int):
-    """ 
-    Reconstructs or reduces dimensions of a given dataset by eigendecomposition of the data matrix
-
-    Args:
-        dataset (np.ndarray): provided example dataset containing (points, images or trajectories)
-        get_full_reconstruction (bool): flag to initialize dimension reduction on dataset
-        n_principal_components (int): number of principle components used for reconstruction
-
-    Returns:
-        reconstructed_dataset (np.ndarray): dimensional reduced reconstruction of the given dataset
-        svd_matrices (tuple): eigendecomposition matrices used during SVD for example for explained variance analyses
-    """
-    mean = np.mean(dataset, axis=0) 
-    dataset_centered = dataset - mean 
-    
-    U, S, Vh = np.linalg.svd(dataset_centered, full_matrices=False)
-    
-    if get_full_reconstruction == False:
-        S[n_principal_components:] = 0
-
-    reconstructed_dataset_centered= U.dot(np.diag(S).dot(Vh))
-    reconstructed_dataset = reconstructed_dataset_centered + mean 
-    svd_matrices = (U, S, Vh)
-    
-    return reconstructed_dataset, svd_matrices
-
-
-def get_truncation_error(truncation_error_threshold: float, image: np.ndarray, n_principal_components: int):
-    """
-    Calculates the explained variance through truncation ("lost energy") for all principle components
-
-    Args:
-        truncation_error_threshold: (float): threshold for truncation error analysis 
-        image (np.ndarray): dataset used for energy analysis (racoon image)
-        n_principal_components (int): number of principle components 
-    Returns:
-        lost_energy (np.ndarray): array containing sum of explained variances ("energy") for every principle components 
-    """
-
-    lost_energy = []
-
-    _, svd_matrices = get_pca_reconstruction(dataset=image,get_full_reconstruction=True, n_principal_components=n_principal_components)
-    S = svd_matrices[1]
-
-    explained_variance = get_explained_variance_ratio(S)
-
-    #calculate energy for every principle component 
-    for principle_component in range(n_principal_components):
-
-        explained_variance_ratio = np.sum(explained_variance[principle_component:])
-        lost_energy.append(explained_variance_ratio)
-    
-    #find first index under threshold
-    lost_energy = np.array(lost_energy)
-    all_threshold_pass_idx = np.where(lost_energy < truncation_error_threshold)
-    first_threshold_pass_idx = np.min(all_threshold_pass_idx)
-
-    return lost_energy, first_threshold_pass_idx
+    train = np.load(path_train)
+    test = np.load(path_test)
+    return train, test

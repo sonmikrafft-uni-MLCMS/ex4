@@ -1,10 +1,9 @@
 import math
-
+import scipy.misc
 import numpy as np
 import pandas as pd
 from sklearn.datasets import make_swiss_roll
-from sklearn.decomposition  import PCA
-
+from skimage.transform import resize
 # collection of functions to generate datasets
 
 
@@ -77,26 +76,89 @@ def get_trajectory_dataset(path: str = "data/data_DMAP_PCA_vadere.txt") -> np.nd
     return pd.read_csv(path, delimiter=" ", header=None).to_numpy()
 
 
-def calc_pca_transformation(dataset: np.ndarray, n_components: int, apply_transformation: bool):
-    """ Apply PCA on a dataset to project it to a lower dimensional space if option is selected
-
-    Args:
-        dataset (np.ndarray): input dataset
-        n_components (int): sets the dimension of the output space
-        apply_transformation (bool): flag to project data into lower dimension
+def get_racoon_img():
+    """ 
+    Used to create and resize an sample image of a racoon
 
     Returns:
-        dataset (np.ndarray): dataset in lower dimension if selected otherwise equal to input dim
-        model (pca object): used to extract variance or direction of principal components
+        racoon_img_reshaped (np.ndarray): Resized image of racoon
     """
-    pca = PCA(n_components=n_components)
-    model = pca.fit(dataset)
+    racoon_img = scipy.misc.face(gray=True)
+    racoon_img_reshaped = resize(racoon_img, (249, 185))
+    return racoon_img_reshaped
 
-    if apply_transformation == True:
-        dataset = pca.transform(dataset)
 
-    else:
-        dataset = pca.transform(dataset)
-        dataset = pca.inverse_transform(dataset)
+def get_explained_variance_ratio(singular_value_matrix: np.ndarray) -> np.ndarray:
+    """ 
+    Used to calculate the energy according to principal components
+
+    Args:
+        singular_value_matrix (np.ndarray): Diagonal singular value matrix from SVD
+
+    Returns:
+        np.ndarray: explained variance ratio ("Energy") per principle component
+
+    """
+    explained_variance_ratio = singular_value_matrix**2/np.sum(singular_value_matrix**2)
+    return explained_variance_ratio
+
+
+def get_pca_reconstruction(dataset: np.ndarray, get_full_reconstruction: bool, n_principal_components: int):
+    """ 
+    Reconstructs or reduces dimensions of a given dataset by eigendecomposition of the data matrix
+
+    Args:
+        dataset (np.ndarray): provided example dataset containing (points, images or trajectories)
+        get_full_reconstruction (bool): flag to initialize dimension reduction on dataset
+        n_principal_components (int): number of principle components used for reconstruction
+
+    Returns:
+        reconstructed_dataset (np.ndarray): dimensional reduced reconstruction of the given dataset
+        svd_matrices (tuple): eigendecomposition matrices used during SVD for example for explained variance analyses
+    """
+    mean = np.mean(dataset, axis=0) 
+    dataset_centered = dataset - mean 
     
-    return dataset, model
+    U, S, Vh = np.linalg.svd(dataset_centered, full_matrices=False)
+    
+    if get_full_reconstruction == False:
+        S[n_principal_components:] = 0
+
+    reconstructed_dataset_centered= U.dot(np.diag(S).dot(Vh))
+    reconstructed_dataset = reconstructed_dataset_centered + mean 
+    svd_matrices = (U, S, Vh)
+    
+    return reconstructed_dataset, svd_matrices
+
+
+def get_truncation_error(truncation_error_threshold: float, image: np.ndarray, n_principal_components: int):
+    """
+    Calculates the explained variance through truncation ("lost energy") for all principle components
+
+    Args:
+        truncation_error_threshold: (float): threshold for truncation error analysis 
+        image (np.ndarray): dataset used for energy analysis (racoon image)
+        n_principal_components (int): number of principle components 
+    Returns:
+        lost_energy (np.ndarray): array containing sum of explained variances ("energy") for every principle components 
+    """
+
+    lost_energy = []
+
+    _, svd_matrices = get_pca_reconstruction(dataset=image,get_full_reconstruction=True, n_principal_components=n_principal_components)
+    S = svd_matrices[1]
+
+    explained_variance = get_explained_variance_ratio(S)
+
+    #calculate energy for every principle component 
+    for principle_component in range(n_principal_components):
+
+        explained_variance_ratio = np.sum(explained_variance[principle_component:])
+        lost_energy.append(explained_variance_ratio)
+    
+    #find first index under threshold
+    lost_energy = np.array(lost_energy)
+    all_threshold_pass_idx = np.where(lost_energy < truncation_error_threshold)
+    first_threshold_pass_idx = np.min(all_threshold_pass_idx)
+
+    return lost_energy, first_threshold_pass_idx

@@ -591,3 +591,26 @@ def plot_2d_train_test(
     fig.tight_layout()
     if save_path:
         fig.savefig(save_path, bbox_inches="tight")
+
+def plot_2d_fire_evac_set(
+    set: np.ndarray, xlabel: str, ylabel: str, title: str, save_path: Optional[str] = None, **kwargs
+) -> None:
+    """Plot train and test data of 2D dataset.
+
+    Args:
+        set (ndarray): 2D data of shape (n_samples, 2).
+        xlabel (str): Label for x-axis.
+        ylabel (str): Label for y-axis.
+        title (str): Title of the plot.
+        save_path (Optional[str], optional): Path to save. Defaults to None.
+        **kwargs: Parameters for matplotlib.pyplot.scatter of both splits.
+    """
+    fig, ax = plt.subplots()
+    ax.scatter(set[:, 0], set[:, 1], color="red", label="train", marker="o", s=6, **kwargs)
+    ax.legend()
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    fig.tight_layout()
+    if save_path:
+        fig.savefig(save_path, bbox_inches="tight")

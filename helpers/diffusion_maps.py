@@ -1,3 +1,5 @@
+# Module to implement the diffusion map algorithm.
+
 import numpy as np
 
 from scipy.sparse.linalg import eigsh

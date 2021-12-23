@@ -1,4 +1,5 @@
 """
+Module to implement a Variational Autoencoder.
 adapted from: (19.12.2021)
 """
 import keras

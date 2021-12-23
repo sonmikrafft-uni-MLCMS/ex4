@@ -1,4 +1,4 @@
-# collection of functions to plot a dataset
+# Module to plot a dataset
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -7,8 +7,6 @@ import numpy as np
 import math
 
 from typing import Optional
-
-# collection of functions to plot a dataset
 
 matplotlib.rcParams["figure.figsize"] = (7, 5)
 CMAP = plt.cm.Spectral

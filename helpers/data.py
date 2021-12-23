@@ -1,12 +1,11 @@
+# Module to generate datasets
+
 import math
 import scipy.misc
 import numpy as np
 import pandas as pd
 from sklearn.datasets import make_swiss_roll
 from skimage.transform import resize
-
-
-# collection of functions to generate datasets
 
 
 def _get_unit_cycle_data_k(k: int, N: int) -> tuple[np.ndarray, np.ndarray]:

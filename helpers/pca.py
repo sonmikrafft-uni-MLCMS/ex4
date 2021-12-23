@@ -1,3 +1,5 @@
+# Module to implement a standard PCA analysis
+
 import numpy as np
 
 

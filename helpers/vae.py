@@ -1,4 +1,5 @@
 """
+Module to implement a Variational Autoencoder.
 adapted from: https://keras.io/guides/making_new_layers_and_models_via_subclassing/ (19.12.2021)
 """
 import keras

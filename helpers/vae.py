@@ -1,5 +1,5 @@
 """
-adapted from: (19.12.2021)
+adapted from: https://keras.io/guides/making_new_layers_and_models_via_subclassing/ (19.12.2021)
 """
 import keras
 import tensorflow as tf
